@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+
 <meta charset="UTF-8">
 
 <meta name="viewport"
@@ -13,9 +14,11 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
 <meta name="theme-color" content="#050608">
 
 <title>Rubi Dashboard</title>
+
 
 <style>
 
@@ -32,6 +35,7 @@
     -webkit-user-select: none;
     user-select: none;
 }
+
 
 html,
 body {
@@ -57,7 +61,7 @@ body {
 
 
 /* =========================================================
-   FONDO
+   FONDO MODO DÍA
    ========================================================= */
 
 body {
@@ -84,6 +88,9 @@ body {
         );
 
     position: relative;
+
+    transition:
+        background 0.5s ease;
 }
 
 
@@ -109,6 +116,131 @@ body:before {
         );
 
     pointer-events: none;
+}
+
+
+/* =========================================================
+   MODO NOCHE
+   ========================================================= */
+
+/*
+   Fondo nocturno principal:
+   azul profundo + rojo/bordó.
+*/
+
+body.night-mode {
+
+    background:
+
+        radial-gradient(
+            ellipse at 15% 20%,
+            rgba(35,25,80,0.70),
+            transparent 50%
+        ),
+
+        radial-gradient(
+            ellipse at 85% 80%,
+            rgba(95,18,45,0.55),
+            transparent 50%
+        ),
+
+        linear-gradient(
+            135deg,
+            #03040a 0%,
+            #100916 45%,
+            #18070e 75%,
+            #030308 100%
+        );
+}
+
+
+/*
+   Variante nocturna azul / rojo.
+*/
+
+body.night-blue-red {
+
+    background:
+
+        radial-gradient(
+            ellipse at 15% 15%,
+            rgba(25,40,110,0.65),
+            transparent 48%
+        ),
+
+        radial-gradient(
+            ellipse at 85% 85%,
+            rgba(100,15,35,0.60),
+            transparent 48%
+        ),
+
+        linear-gradient(
+            135deg,
+            #02030a,
+            #090c22,
+            #1a0710,
+            #030308
+        );
+}
+
+
+/*
+   Variante nocturna más roja.
+*/
+
+body.night-red {
+
+    background:
+
+        radial-gradient(
+            ellipse at 20% 20%,
+            rgba(75,15,30,0.55),
+            transparent 50%
+        ),
+
+        radial-gradient(
+            ellipse at 85% 80%,
+            rgba(120,20,40,0.45),
+            transparent 50%
+        ),
+
+        linear-gradient(
+            135deg,
+            #030306,
+            #12070c,
+            #230911,
+            #050307
+        );
+}
+
+
+/*
+   Variante nocturna más azul.
+*/
+
+body.night-blue {
+
+    background:
+
+        radial-gradient(
+            ellipse at 15% 20%,
+            rgba(25,45,120,0.65),
+            transparent 50%
+        ),
+
+        radial-gradient(
+            ellipse at 90% 80%,
+            rgba(20,15,80,0.60),
+            transparent 50%
+        ),
+
+        linear-gradient(
+            135deg,
+            #02030a,
+            #071027,
+            #09091d,
+            #020207
+        );
 }
 
 
@@ -261,6 +393,21 @@ body:before {
 
     text-shadow:
         0 8px 35px rgba(0,0,0,0.45);
+
+    transition:
+        color 0.4s ease,
+        opacity 0.4s ease;
+}
+
+
+/* En modo noche bajamos un poco el brillo */
+
+body.night-mode .time {
+
+    color: rgba(255,245,245,0.92);
+
+    text-shadow:
+        0 6px 25px rgba(0,0,0,0.70);
 }
 
 
@@ -281,6 +428,12 @@ body:before {
     text-transform: capitalize;
 
     letter-spacing: -0.4px;
+}
+
+
+body.night-mode .date {
+
+    color: #c94a52;
 }
 
 
@@ -321,6 +474,20 @@ body:before {
 
     backdrop-filter:
         blur(20px);
+}
+
+
+body.night-mode .weather {
+
+    background:
+        rgba(255,255,255,0.045);
+
+    border-color:
+        rgba(255,100,110,0.10);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.06),
+        0 12px 35px rgba(0,0,0,0.45);
 }
 
 
@@ -413,6 +580,25 @@ body:before {
 }
 
 
+body.night-mode .calendar {
+
+    background:
+        rgba(255,255,255,0.04);
+
+    border-color:
+        rgba(255,100,110,0.09);
+
+    box-shadow:
+
+        inset
+        0 1px 0
+        rgba(255,255,255,0.05),
+
+        0 15px 45px
+        rgba(0,0,0,0.55);
+}
+
+
 .calendar-header {
 
     display: flex;
@@ -446,8 +632,6 @@ body:before {
 }
 
 
-/* fila días semana */
-
 .week {
 
     display: flex;
@@ -472,8 +656,6 @@ body:before {
         rgba(255,255,255,0.35);
 }
 
-
-/* grilla */
 
 .days {
 
@@ -532,6 +714,16 @@ body:before {
     box-shadow:
         0 4px 12px
         rgba(255,69,58,0.40);
+}
+
+
+body.night-mode .day.today span {
+
+    background: #a52e3b;
+
+    box-shadow:
+        0 3px 10px
+        rgba(150,30,45,0.30);
 }
 
 
@@ -602,6 +794,19 @@ body:before {
     justify-content: center;
 
     cursor: pointer;
+}
+
+
+body.night-mode .icon-button {
+
+    background:
+        rgba(255,255,255,0.035);
+
+    border-color:
+        rgba(255,100,110,0.09);
+
+    color:
+        rgba(255,230,230,0.60);
 }
 
 
@@ -739,9 +944,6 @@ body:before {
    RESPONSIVE
    ========================================================= */
 
-
-/* Tablet horizontal 1024x600 */
-
 @media (max-width: 1100px) {
 
     .dashboard {
@@ -774,7 +976,7 @@ body:before {
 
 
 /* =========================================================
-   1024 x 600 ESPECÍFICO
+   1024 x 600
    ========================================================= */
 
 @media (max-height: 650px) {
@@ -856,7 +1058,7 @@ body:before {
 
 
 /* =========================================================
-   PANTALLAS MUY PEQUEÑAS
+   PANTALLAS PEQUEÑAS
    ========================================================= */
 
 @media (max-width: 750px) {
@@ -889,7 +1091,7 @@ body:before {
 
 
 /* =========================================================
-   MODO MUY AHORRADOR
+   MODO AHORRO
    ========================================================= */
 
 .low-power * {
@@ -906,6 +1108,7 @@ body:before {
 <body>
 
 <div class="dashboard">
+
 
     <!-- =====================================================
          TOP BAR
@@ -1059,24 +1262,46 @@ body:before {
 
 
         <div class="footer-right">
-    <button
-        class="icon-button"
-        id="downloadButton"
-        title="Descargar dashboard">
-        ↓
-    </button>
 
-    <button
-        class="icon-button"
-        id="refreshButton">
-        ↻
-    </button>
+            <!-- MODO NOCHE -->
 
-    <button
-        class="icon-button"
-        id="settingsButton">
-        ⚙
-    </button>
+            <button
+                class="icon-button"
+                id="nightButton"
+                title="Modo noche">
+                ☾
+            </button>
+
+
+            <!-- DESCARGAR -->
+
+            <button
+                class="icon-button"
+                id="downloadButton"
+                title="Descargar dashboard">
+                ↓
+            </button>
+
+
+            <!-- REFRESCAR -->
+
+            <button
+                class="icon-button"
+                id="refreshButton"
+                title="Actualizar">
+                ↻
+            </button>
+
+
+            <!-- AJUSTES -->
+
+            <button
+                class="icon-button"
+                id="settingsButton"
+                title="Ajustes">
+                ⚙
+            </button>
+
         </div>
 
     </div>
@@ -1085,7 +1310,7 @@ body:before {
 
 
 <!-- =========================================================
-     MODAL
+     MODAL AJUSTES
      ========================================================= -->
 
 <div
@@ -1137,6 +1362,39 @@ body:before {
                 class="input"
                 id="lonInput"
                 value="-58.3816">
+
+        </div>
+
+
+        <!-- FONDO NOCTURNO -->
+
+        <div class="form-group">
+
+            <label>
+                Fondo del modo noche
+            </label>
+
+            <select
+                class="input"
+                id="nightBackground">
+
+                <option value="night-mode">
+                    Rojo + Azul
+                </option>
+
+                <option value="night-blue-red">
+                    Azul profundo + Rojo
+                </option>
+
+                <option value="night-red">
+                    Rojo oscuro
+                </option>
+
+                <option value="night-blue">
+                    Azul oscuro
+                </option>
+
+            </select>
 
         </div>
 
@@ -1211,6 +1469,16 @@ var latInput =
 var lonInput =
     document.getElementById("lonInput");
 
+var nightBackground =
+    document.getElementById(
+        "nightBackground"
+    );
+
+var nightButton =
+    document.getElementById(
+        "nightButton"
+    );
+
 
 /* =========================================================
    CONFIGURACIÓN
@@ -1276,11 +1544,17 @@ function actualizarReloj() {
         ahora.getMinutes();
 
     if (horas < 10) {
-        horas = "0" + horas;
+
+        horas =
+            "0" + horas;
+
     }
 
     if (minutos < 10) {
-        minutos = "0" + minutos;
+
+        minutos =
+            "0" + minutos;
+
     }
 
     clock.textContent =
@@ -1382,8 +1656,6 @@ function generarCalendario() {
     var i;
 
 
-    /* espacios */
-
     for (
         i = 0;
         i < primerDia;
@@ -1391,7 +1663,9 @@ function generarCalendario() {
     ) {
 
         var empty =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
         empty.className =
             "day empty";
@@ -1399,10 +1673,9 @@ function generarCalendario() {
         calendarDays.appendChild(
             empty
         );
+
     }
 
-
-    /* días */
 
     for (
         i = 1;
@@ -1411,20 +1684,26 @@ function generarCalendario() {
     ) {
 
         var elemento =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
         elemento.className =
             "day";
 
 
         var numero =
-            document.createElement("span");
+            document.createElement(
+                "span"
+            );
 
         numero.textContent =
             i;
 
 
-        if (i === diaActual) {
+        if (
+            i === diaActual
+        ) {
 
             elemento.className =
                 "day today";
@@ -1450,7 +1729,7 @@ generarCalendario();
 
 
 /* =========================================================
-   CLIMA
+   CONFIGURACIÓN
    ========================================================= */
 
 function obtenerConfiguracion() {
@@ -1460,17 +1739,20 @@ function obtenerConfiguracion() {
         city:
             localStorage.getItem(
                 "dashboard_city"
-            ) || "Buenos Aires",
+            ) ||
+            "Buenos Aires",
 
         lat:
             localStorage.getItem(
                 "dashboard_lat"
-            ) || "-34.6037",
+            ) ||
+            "-34.6037",
 
         lon:
             localStorage.getItem(
                 "dashboard_lon"
-            ) || "-58.3816"
+            ) ||
+            "-58.3816"
 
     };
 
@@ -1478,75 +1760,51 @@ function obtenerConfiguracion() {
 
 
 /* =========================================================
-   ICONOS DEL CLIMA
+   ICONOS CLIMA
    ========================================================= */
 
 function obtenerIconoClima(
     codigo
 ) {
 
-    if (codigo === 0) {
-
+    if (codigo === 0)
         return "☀";
-
-    }
 
     if (
         codigo === 1 ||
         codigo === 2
-    ) {
-
+    )
         return "🌤";
 
-    }
-
-    if (codigo === 3) {
-
+    if (codigo === 3)
         return "☁";
-
-    }
 
     if (
         codigo === 45 ||
         codigo === 48
-    ) {
-
+    )
         return "🌫";
-
-    }
 
     if (
         codigo >= 51 &&
         codigo <= 67
-    ) {
-
+    )
         return "🌧";
-
-    }
 
     if (
         codigo >= 71 &&
         codigo <= 77
-    ) {
-
+    )
         return "❄";
-
-    }
 
     if (
         codigo >= 80 &&
         codigo <= 82
-    ) {
-
+    )
         return "🌧";
 
-    }
-
-    if (codigo >= 95) {
-
+    if (codigo >= 95)
         return "⛈";
-
-    }
 
     return "☁";
 
@@ -1554,7 +1812,7 @@ function obtenerIconoClima(
 
 
 /* =========================================================
-   TEXTO DEL CLIMA
+   TEXTO CLIMA
    ========================================================= */
 
 function traducirClima(
@@ -1644,15 +1902,12 @@ function guardarClima(
 
         localStorage.setItem(
             "dashboard_weather",
-            JSON.stringify(datos)
+            JSON.stringify(
+                datos
+            )
         );
 
-    } catch (e) {
-
-        /* Si falla localStorage,
-           no hacemos nada */
-
-    }
+    } catch (e) {}
 
 }
 
@@ -1720,7 +1975,8 @@ function cargarClimaGuardado() {
 
         if (
             datos &&
-            typeof datos.temperature !== "undefined"
+            typeof datos.temperature !==
+            "undefined"
         ) {
 
             mostrarClima(
@@ -1751,7 +2007,7 @@ function cargarClimaGuardado() {
 
 
 /* =========================================================
-   OBTENER CLIMA ONLINE
+   CLIMA ONLINE
    ========================================================= */
 
 function obtenerClima() {
@@ -1830,10 +2086,12 @@ function obtenerClima() {
                     ) {
 
                         var temp =
-                            respuesta.current.temperature_2m;
+                            respuesta.current
+                                .temperature_2m;
 
                         var codigo =
-                            respuesta.current.weather_code;
+                            respuesta.current
+                                .weather_code;
 
 
                         guardarClima(
@@ -1913,7 +2171,7 @@ function obtenerClima() {
 
 
 /* =========================================================
-   ERROR / SIN INTERNET
+   ERROR CLIMA
    ========================================================= */
 
 function manejarErrorClima() {
@@ -1955,13 +2213,6 @@ function manejarErrorClima() {
 /* =========================================================
    ARRANQUE CLIMA
    ========================================================= */
-
-/*
-   Primero mostramos inmediatamente
-   el último clima guardado.
-
-   Después intentamos obtener uno nuevo.
-*/
 
 cargarClimaGuardado();
 
@@ -2018,7 +2269,7 @@ window.addEventListener(
 
 
 /* =========================================================
-   BOTÓN REFRESH
+   REFRESH
    ========================================================= */
 
 document.getElementById(
@@ -2032,6 +2283,110 @@ document.getElementById(
     actualizarReloj();
 
 };
+
+
+/* =========================================================
+   MODO DÍA / NOCHE
+   ========================================================= */
+
+function aplicarModoNoche() {
+
+    var fondo =
+        localStorage.getItem(
+            "dashboard_night_background"
+        ) ||
+        "night-mode";
+
+
+    /*
+       Quitamos todos los fondos nocturnos
+    */
+
+    document.body.className =
+        "low-power";
+
+
+    /*
+       Si corresponde modo noche,
+       aplicamos el fondo elegido.
+    */
+
+    var modo =
+        localStorage.getItem(
+            "dashboard_mode"
+        ) ||
+        "day";
+
+
+    if (modo === "night") {
+
+        document.body.className =
+            "low-power night-mode " +
+            fondo;
+
+        nightButton.textContent =
+            "☀";
+
+        nightButton.title =
+            "Modo día";
+
+    }
+
+    else {
+
+        document.body.className =
+            "low-power";
+
+        nightButton.textContent =
+            "☾";
+
+        nightButton.title =
+            "Modo noche";
+
+    }
+
+}
+
+
+/* =========================================================
+   CAMBIAR DÍA / NOCHE
+   ========================================================= */
+
+nightButton.onclick =
+    function() {
+
+        var modoActual =
+            localStorage.getItem(
+                "dashboard_mode"
+            ) ||
+            "day";
+
+
+        if (
+            modoActual ===
+            "day"
+        ) {
+
+            localStorage.setItem(
+                "dashboard_mode",
+                "night"
+            );
+
+        }
+
+        else {
+
+            localStorage.setItem(
+                "dashboard_mode",
+                "day"
+            );
+
+        }
+
+
+        aplicarModoNoche();
+
+    };
 
 
 /* =========================================================
@@ -2056,6 +2411,13 @@ document.getElementById(
         config.lon;
 
 
+    nightBackground.value =
+        localStorage.getItem(
+            "dashboard_night_background"
+        ) ||
+        "night-mode";
+
+
     settingsModal.className =
         "modal active";
 
@@ -2068,37 +2430,47 @@ document.getElementById(
 
 document.getElementById(
     "saveButton"
-).onclick = function() {
+).onclick =
+    function() {
 
-    localStorage.setItem(
-        "dashboard_city",
-        cityInput.value
-    );
-
-
-    localStorage.setItem(
-        "dashboard_lat",
-        latInput.value
-    );
+        localStorage.setItem(
+            "dashboard_city",
+            cityInput.value
+        );
 
 
-    localStorage.setItem(
-        "dashboard_lon",
-        lonInput.value
-    );
+        localStorage.setItem(
+            "dashboard_lat",
+            latInput.value
+        );
 
 
-    city.textContent =
-        cityInput.value;
+        localStorage.setItem(
+            "dashboard_lon",
+            lonInput.value
+        );
 
 
-    settingsModal.className =
-        "modal";
+        localStorage.setItem(
+            "dashboard_night_background",
+            nightBackground.value
+        );
 
 
-    obtenerClima();
+        city.textContent =
+            cityInput.value;
 
-};
+
+        settingsModal.className =
+            "modal";
+
+
+        aplicarModoNoche();
+
+
+        obtenerClima();
+
+    };
 
 
 /* =========================================================
@@ -2122,7 +2494,7 @@ settingsModal.onclick =
 
 
 /* =========================================================
-   CARGAR CONFIGURACIÓN INICIAL
+   CONFIGURACIÓN INICIAL
    ========================================================= */
 
 (function() {
@@ -2134,71 +2506,69 @@ settingsModal.onclick =
     city.textContent =
         config.city;
 
+
+    aplicarModoNoche();
+
 })();
 
 
 /* =========================================================
-   MODO AHORRO
+   DESCARGAR HTML
    ========================================================= */
 
-/*
-   La tablet tiene solo 1 GB RAM.
-   Dejamos una clase preparada para
-   desactivar animaciones si alguna vez
-   queremos priorizar consumo mínimo.
-*/
+document.getElementById(
+    "downloadButton"
+).onclick =
+    function() {
 
-document.body.className =
-    "low-power";
-/* =========================================================
-   EXPORTAR HTML - COMPATIBILIDAD ANDROID 4.4
-   ========================================================= */
+        var copia =
+            document.documentElement
+                .cloneNode(true);
 
-document.getElementById("downloadButton").onclick = function() {
 
-    var copia =
-        document.documentElement.cloneNode(true);
+        /*
+           Eliminamos el botón
+           de descarga de la copia.
+        */
 
-    /* Eliminar botón de descarga */
-    var boton =
-        copia.querySelector("#downloadButton");
+        var boton =
+            copia.querySelector(
+                "#downloadButton"
+            );
 
-    if (boton) {
-        boton.parentNode.removeChild(boton);
-    }
 
-    /* Eliminar este propio script de exportación */
-    var scripts =
-        copia.getElementsByTagName("script");
+        if (boton) {
 
-    /*
-       No eliminamos los scripts porque
-       necesitamos conservar todo el funcionamiento.
-    */
+            boton.parentNode
+                .removeChild(
+                    boton
+                );
 
-    var html =
-        "<!DOCTYPE html>\n" +
-        copia.outerHTML;
+        }
 
-    /*
-       Codificamos el HTML directamente
-       en una URL data:
-    */
 
-    var encoded =
-        encodeURIComponent(html);
+        var html =
+            "<!DOCTYPE html>\n" +
+            copia.outerHTML;
 
-    /*
-       Abrimos una nueva pestaña.
-    */
 
-    window.open(
-        "data:text/html;charset=utf-8," +
-        encoded,
-        "_blank"
-    );
+        var encoded =
+            encodeURIComponent(
+                html
+            );
 
-};
+
+        window.open(
+
+            "data:text/html;charset=utf-8," +
+            encoded,
+
+            "_blank"
+
+        );
+
+    };
+
 
 </script>
 

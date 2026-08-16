@@ -1,626 +1,2153 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>iOS Smart Dashboard</title>
+<meta charset="UTF-8">
 
-  <!-- PWA & Web App Meta Tags para Pantalla Completa -->
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#000000">
+<meta name="viewport"
+      content="width=device-width,
+               initial-scale=1.0,
+               maximum-scale=1.0,
+               minimum-scale=1.0,
+               user-scalable=no">
 
-  <style>
-    /* Reset & Tipografía iOS System */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-tap-highlight-color: transparent;
-      user-select: none;
-    }
-    html, body {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
-      color: #ffffff;
-      background-color: #000000;
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#050608">
+
+<title>Rubi Dashboard</title>
+
+<style>
+
+/* =========================================================
+   RESET
+   ========================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+html,
+body {
+
+    width: 100%;
+    height: 100%;
+
+    overflow: hidden;
+
+    background: #050608;
+
+    color: #ffffff;
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Helvetica Neue",
+        Arial,
+        sans-serif;
+
+    -webkit-font-smoothing: antialiased;
+}
+
+
+/* =========================================================
+   FONDO
+   ========================================================= */
+
+body {
+
+    background:
+
+        radial-gradient(
+            ellipse at 15% 15%,
+            rgba(65,85,125,0.55),
+            transparent 45%
+        ),
+
+        radial-gradient(
+            ellipse at 90% 90%,
+            rgba(70,35,100,0.45),
+            transparent 45%
+        ),
+
+        linear-gradient(
+            135deg,
+            #050608 0%,
+            #10141e 50%,
+            #06070b 100%
+        );
+
+    position: relative;
+}
+
+
+/* brillo ambiental */
+
+body:before {
+
+    content: "";
+
+    position: absolute;
+
+    width: 55vw;
+    height: 55vw;
+
+    left: -20vw;
+    top: -35vw;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255,255,255,0.05),
+            transparent 65%
+        );
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   CONTENEDOR PRINCIPAL
+   ========================================================= */
+
+.dashboard {
+
+    width: 100%;
+    height: 100%;
+
+    padding: 26px 32px;
+
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+
+    z-index: 1;
+}
+
+
+/* =========================================================
+   BARRA SUPERIOR
+   ========================================================= */
+
+.topbar {
+
+    height: 38px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+}
+
+
+.status {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    color: rgba(255,255,255,0.55);
+
+    font-size: 13px;
+
+    font-weight: 500;
+
+    letter-spacing: 0.2px;
+}
+
+
+.status-dot {
+
+    width: 8px;
+    height: 8px;
+
+    border-radius: 50%;
+
+    background: #30d158;
+
+    box-shadow:
+        0 0 10px rgba(48,209,88,0.65);
+}
+
+
+.status-dot.offline {
+
+    background: #ff9f0a;
+
+    box-shadow:
+        0 0 10px rgba(255,159,10,0.5);
+}
+
+
+.city {
+
+    color: rgba(255,255,255,0.55);
+
+    font-size: 13px;
+
+    font-weight: 500;
+}
+
+
+/* =========================================================
+   CONTENIDO PRINCIPAL
+   ========================================================= */
+
+.content {
+
+    flex: 1;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 30px;
+
+    min-height: 0;
+}
+
+
+/* =========================================================
+   ZONA IZQUIERDA
+   ========================================================= */
+
+.left {
+
+    flex: 1;
+
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    padding-left: 20px;
+}
+
+
+/* =========================================================
+   HORA
+   ========================================================= */
+
+.time {
+
+    font-size: clamp(
+        90px,
+        14vw,
+        145px
+    );
+
+    line-height: 0.85;
+
+    font-weight: 600;
+
+    letter-spacing: -7px;
+
+    color: #ffffff;
+
+    text-shadow:
+        0 8px 35px rgba(0,0,0,0.45);
+}
+
+
+.date {
+
+    margin-top: 24px;
+
+    font-size: clamp(
+        20px,
+        2.8vw,
+        29px
+    );
+
+    font-weight: 500;
+
+    color: #ff453a;
+
+    text-transform: capitalize;
+
+    letter-spacing: -0.4px;
+}
+
+
+/* =========================================================
+   CLIMA
+   ========================================================= */
+
+.weather {
+
+    margin-top: 32px;
+
+    width: 330px;
+
+    min-height: 92px;
+
+    padding: 18px 22px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+
+    border-radius: 25px;
+
+    background:
+        rgba(255,255,255,0.075);
+
+    border:
+        1px solid rgba(255,255,255,0.12);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.10),
+        0 12px 35px rgba(0,0,0,0.25);
+
+    -webkit-backdrop-filter:
+        blur(20px);
+
+    backdrop-filter:
+        blur(20px);
+}
+
+
+.weather-icon {
+
+    font-size: 40px;
+
+    width: 48px;
+
+    text-align: center;
+}
+
+
+.weather-info {
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+}
+
+
+.temperature {
+
+    font-size: 32px;
+
+    font-weight: 600;
+
+    line-height: 1;
+
+    letter-spacing: -1px;
+}
+
+
+.weather-status {
+
+    margin-top: 7px;
+
+    font-size: 14px;
+
+    color:
+        rgba(255,255,255,0.65);
+}
+
+
+.weather-updated {
+
+    margin-top: 4px;
+
+    font-size: 11px;
+
+    color:
+        rgba(255,255,255,0.35);
+}
+
+
+/* =========================================================
+   CALENDARIO
+   ========================================================= */
+
+.calendar {
+
+    width: 350px;
+
+    padding: 24px;
+
+    border-radius: 28px;
+
+    background:
+        rgba(255,255,255,0.075);
+
+    border:
+        1px solid rgba(255,255,255,0.12);
+
+    box-shadow:
+
+        inset
+        0 1px 0
+        rgba(255,255,255,0.12),
+
+        0 15px 45px
+        rgba(0,0,0,0.30);
+
+    -webkit-backdrop-filter:
+        blur(20px);
+
+    backdrop-filter:
+        blur(20px);
+}
+
+
+.calendar-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 18px;
+}
+
+
+.calendar-title {
+
+    font-size: 19px;
+
+    font-weight: 600;
+
+    text-transform: capitalize;
+
+    letter-spacing: -0.3px;
+}
+
+
+.calendar-year {
+
+    color:
+        rgba(255,255,255,0.40);
+
+    font-size: 13px;
+}
+
+
+/* fila días semana */
+
+.week {
+
+    display: flex;
+
+    width: 100%;
+
+    margin-bottom: 7px;
+}
+
+
+.week div {
+
+    flex: 1;
+
+    text-align: center;
+
+    font-size: 10px;
+
+    font-weight: 600;
+
+    color:
+        rgba(255,255,255,0.35);
+}
+
+
+/* grilla */
+
+.days {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    width: 100%;
+}
+
+
+.day {
+
+    width: 14.285%;
+
+    height: 35px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 13px;
+
+    color:
+        rgba(255,255,255,0.78);
+}
+
+
+.day.empty {
+
+    opacity: 0;
+}
+
+
+.day.today span {
+
+    width: 29px;
+    height: 29px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #ff453a;
+
+    color: #ffffff;
+
+    font-weight: 600;
+
+    box-shadow:
+        0 4px 12px
+        rgba(255,69,58,0.40);
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.footer {
+
+    height: 42px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+}
+
+
+.quote {
+
+    font-size: 12px;
+
+    color:
+        rgba(255,255,255,0.32);
+
+    font-weight: 400;
+}
+
+
+.footer-right {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+/* =========================================================
+   BOTONES
+   ========================================================= */
+
+.icon-button {
+
+    width: 34px;
+    height: 34px;
+
+    border-radius: 50%;
+
+    border:
+        1px solid
+        rgba(255,255,255,0.10);
+
+    background:
+        rgba(255,255,255,0.06);
+
+    color:
+        rgba(255,255,255,0.65);
+
+    font-size: 15px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   MODAL AJUSTES
+   ========================================================= */
+
+.modal {
+
+    position: fixed;
+
+    left: 0;
+    top: 0;
+
+    width: 100%;
+    height: 100%;
+
+    display: none;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background:
+        rgba(0,0,0,0.65);
+
+    z-index: 50;
+}
+
+
+.modal.active {
+
+    display: flex;
+}
+
+
+.modal-box {
+
+    width: 380px;
+
+    max-width: 85%;
+
+    padding: 26px;
+
+    border-radius: 28px;
+
+    background:
+        #1c1c1e;
+
+    border:
+        1px solid
+        rgba(255,255,255,0.12);
+
+    box-shadow:
+        0 25px 70px
+        rgba(0,0,0,0.65);
+}
+
+
+.modal-title {
+
+    font-size: 20px;
+
+    font-weight: 600;
+
+    margin-bottom: 22px;
+}
+
+
+.form-group {
+
+    margin-bottom: 16px;
+}
+
+
+.form-group label {
+
+    display: block;
+
+    margin-bottom: 7px;
+
+    font-size: 12px;
+
+    color:
+        rgba(255,255,255,0.50);
+}
+
+
+.input {
+
+    width: 100%;
+
+    padding: 12px;
+
+    border-radius: 12px;
+
+    border:
+        1px solid
+        rgba(255,255,255,0.10);
+
+    background:
+        #2c2c2e;
+
+    color: white;
+
+    font-size: 14px;
+
+    outline: none;
+}
+
+
+.save-button {
+
+    width: 100%;
+
+    margin-top: 8px;
+
+    padding: 13px;
+
+    border: none;
+
+    border-radius: 13px;
+
+    background: #0a84ff;
+
+    color: white;
+
+    font-size: 15px;
+
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+
+/* Tablet horizontal 1024x600 */
+
+@media (max-width: 1100px) {
+
+    .dashboard {
+
+        padding: 20px 25px;
     }
 
-    /* ESTILOS DE FONDOS ESTILO iOS */
-    /* 1. iOS Dark Gradient (Default) */
-    .bg-ios-dark {
-      background: linear-gradient(135deg, #0b0c10 0%, #1a1c23 50%, #0d0e12 100%);
+    .content {
+
+        gap: 20px;
     }
 
-    /* 2. iOS Blur Neón */
-    .bg-ios-neon {
-      background: linear-gradient(-45deg, #1f0036, #001f3f, #00332a, #2b0018);
-      -webkit-animation: gradientAnimation 18s ease infinite;
-      animation: gradientAnimation 18s ease infinite;
-      background-size: 400% 400%;
-    }
-    @-webkit-keyframes gradientAnimation {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-    @keyframes gradientAnimation {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+    .calendar {
+
+        width: 315px;
+
+        padding: 20px;
     }
 
-    /* 3. iOS Midnight Blue */
-    .bg-ios-midnight {
-      background: linear-gradient(180deg, #0f2027, #203a43, #2c5364);
+    .weather {
+
+        width: 310px;
     }
 
-    /* 4. OLED Black */
-    .bg-ios-oled {
-      background: #000000;
+    .left {
+
+        padding-left: 10px;
+    }
+}
+
+
+/* =========================================================
+   1024 x 600 ESPECÍFICO
+   ========================================================= */
+
+@media (max-height: 650px) {
+
+    .dashboard {
+
+        padding:
+            18px 24px;
     }
 
-    /* WIDGETS CON EFECTO GLASSMORPHISM (CRISTAL TRASLÚCIDO) */
-    .ios-card {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      -webkit-backdrop-filter: blur(25px);
-      border-radius: 24px;
-      padding: 18px 22px;
-      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    .topbar {
+
+        height: 28px;
     }
 
-    /* Layout principal GRID estilo iPad / Dashboard */
-    .dashboard-container {
-      display: -webkit-box;
-      display: -webkit-flex;
-      display: flex;
-      -webkit-box-orient: vertical;
-      -webkit-box-direction: normal;
-      -webkit-flex-direction: column;
-      flex-direction: column;
-      -webkit-box-pack: justify;
-      -webkit-justify-content: space-between;
-      justify-content: space-between;
-      height: 100vh;
-      padding: 24px;
-      position: relative;
-      z-index: 1;
+    .time {
+
+        font-size: 108px;
+
+        letter-spacing: -6px;
     }
 
-    /* Header: Status Bar superior */
-    .status-bar {
-      display: -webkit-box;
-      display: -webkit-flex;
-      display: flex;
-      -webkit-box-pack: justify;
-      -webkit-justify-content: space-between;
-      justify-content: space-between;
-      -webkit-box-align: center;
-      -webkit-align-items: center;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-    .status-badge {
-      font-size: 0.8rem;
-      font-weight: 500;
-      color: rgba(255, 255, 255, 0.7);
-      display: -webkit-box;
-      display: -webkit-flex;
-      display: flex;
-      -webkit-box-align: center;
-      -webkit-align-items: center;
-      align-items: center;
-    }
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      background-color: #30d158; /* Verde Apple */
-      border-radius: 50%;
-      margin-right: 6px;
+    .date {
+
+        margin-top: 15px;
+
+        font-size: 20px;
     }
 
-    /* Cuerpo Principal: 2 Columnas (Reloj + Clima a la Izq, Calendario a la Der) */
-    .main-content {
-      display: -webkit-box;
-      display: -webkit-flex;
-      display: flex;
-      -webkit-box-flex: 1;
-      -webkit-flex: 1;
-      flex: 1;
-      -webkit-box-align: center;
-      -webkit-align-items: center;
-      align-items: center;
-      -webkit-box-pack: justify;
-      -webkit-justify-content: space-between;
-      justify-content: space-between;
-      gap: 20px;
+    .weather {
+
+        margin-top: 20px;
+
+        min-height: 78px;
+
+        padding: 14px 18px;
     }
 
-    /* Seccion Izquierda: Reloj y Clima */
-    .left-section {
-      -webkit-box-flex: 1;
-      -webkit-flex: 1;
-      flex: 1;
-      display: -webkit-box;
-      display: -webkit-flex;
-      display: flex;
-      -webkit-box-orient: vertical;
-      -webkit-box-direction: normal;
-      -webkit-flex-direction: column;
-      flex-direction: column;
-      -webkit-box-pack: center;
-      -webkit-justify-content: center;
-      justify-content: center;
+    .weather-icon {
+
+        font-size: 32px;
     }
 
-    .clock-time {
-      font-size: 7.5rem;
-      font-weight: 700;
-      letter-spacing: -3px;
-      line-height: 0.9;
-      color: #ffffff;
-      text-shadow: 0 4px 20px rgba(0,0,0,0.4);
-    }
-    .clock-date {
-      font-size: 1.6rem;
-      font-weight: 500;
-      color: #ff3b30; /* Rojo/Naranja icónico de la app Calendario de Apple */
-      margin-top: 12px;
-      text-transform: capitalize;
-      letter-spacing: -0.5px;
+    .temperature {
+
+        font-size: 28px;
     }
 
-    /* Widget Clima en columna izquierda */
-    .weather-widget {
-      margin-top: 25px;
-      display: -webkit-box;
-      display: -webkit-flex;
-      display: flex;
-      -webkit-box-align: center;
-      -webkit-align-items: center;
-      align-items: center;
-      width: -webkit-fit-content;
-      width: fit-content;
-    }
-    .weather-temp {
-      font-size: 2.2rem;
-      font-weight: 600;
-      margin-right: 14px;
-    }
-    .weather-details {
-      font-size: 0.9rem;
-      line-height: 1.3;
-      color: rgba(255, 255, 255, 0.85);
+    .calendar {
+
+        width: 300px;
+
+        padding: 18px;
     }
 
-    /* Seccion Derecha: Widget Calendario iOS */
-    .right-section {
-      width: 320px;
-    }
-
-    .calendar-widget {
-      width: 100%;
-    }
     .calendar-header {
-      display: -webkit-box;
-      display: -webkit-flex;
-      display: flex;
-      -webkit-box-pack: justify;
-      -webkit-justify-content: space-between;
-      justify-content: space-between;
-      -webkit-box-align: center;
-      -webkit-align-items: center;
-      align-items: center;
-      margin-bottom: 14px;
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: #ffffff;
-      text-transform: capitalize;
-    }
-    .calendar-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 6px;
-      text-align: center;
-    }
-    .cal-day-name {
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: rgba(255, 255, 255, 0.4);
-      margin-bottom: 4px;
-      text-transform: uppercase;
-    }
-    .cal-day {
-      font-size: 0.95rem;
-      font-weight: 400;
-      height: 32px;
-      width: 32px;
-      line-height: 32px;
-      margin: 0 auto;
-      border-radius: 50%;
-      color: rgba(255, 255, 255, 0.9);
-    }
-    .cal-day.empty {
-      background: transparent;
-    }
-    .cal-day.today {
-      background-color: #ff3b30; /* Círculo rojo de iOS en el día actual */
-      color: #ffffff;
-      font-weight: 700;
-      box-shadow: 0 2px 10px rgba(255, 59, 48, 0.5);
+
+        margin-bottom: 12px;
     }
 
-    /* Footer y Botones de Control */
+    .day {
+
+        height: 30px;
+
+        font-size: 12px;
+    }
+
+    .day.today span {
+
+        width: 25px;
+        height: 25px;
+    }
+
     .footer {
-      display: -webkit-box;
-      display: -webkit-flex;
-      display: flex;
-      -webkit-box-pack: justify;
-      -webkit-justify-content: space-between;
-      justify-content: space-between;
-      -webkit-box-align: center;
-      -webkit-align-items: center;
-      align-items: center;
+
+        height: 32px;
     }
-    .quote-box {
-      font-size: 0.95rem;
-      font-weight: 400;
-      color: rgba(255, 255, 255, 0.6);
-      max-width: 75%;
-    }
-    .controls {
-      display: -webkit-box;
-      display: -webkit-flex;
-      display: flex;
-      gap: 10px;
-    }
-    .btn-ios {
-      background: rgba(255, 255, 255, 0.12);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: #ffffff;
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      font-size: 1.1rem;
-      display: -webkit-box;
-      display: -webkit-flex;
-      display: flex;
-      -webkit-box-pack: center;
-      -webkit-justify-content: center;
-      justify-content: center;
-      -webkit-box-align: center;
-      -webkit-align-items: center;
-      align-items: center;
-      cursor: pointer;
+}
+
+
+/* =========================================================
+   PANTALLAS MUY PEQUEÑAS
+   ========================================================= */
+
+@media (max-width: 750px) {
+
+    .dashboard {
+
+        padding: 15px;
     }
 
-    /* Modal de Ajustes Estilo iOS Sheet */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      z-index: 10;
-      -webkit-box-pack: center;
-      -webkit-justify-content: center;
-      justify-content: center;
-      -webkit-box-align: center;
-      -webkit-align-items: center;
-      align-items: center;
+    .content {
+
+        gap: 12px;
     }
-    .modal.active {
-      display: -webkit-box;
-      display: -webkit-flex;
-      display: flex;
+
+    .calendar {
+
+        width: 275px;
     }
-    .modal-content {
-      background: #1c1c1e; /* Color oscuro oficial de iOS modal */
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      width: 90%;
-      max-width: 420px;
-      border-radius: 28px;
-      padding: 24px;
+
+    .weather {
+
+        width: 290px;
     }
-    .modal-title {
-      font-size: 1.3rem;
-      font-weight: 600;
-      margin-bottom: 18px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      padding-bottom: 10px;
+
+    .quote {
+
+        display: none;
     }
-    .form-group {
-      margin-bottom: 16px;
-    }
-    .form-group label {
-      display: block;
-      font-size: 0.85rem;
-      margin-bottom: 6px;
-      color: rgba(255, 255, 255, 0.6);
-    }
-    .form-control {
-      width: 100%;
-      padding: 12px;
-      background: #2c2c2e;
-      border: 1px solid #3a3a3c;
-      color: #fff;
-      border-radius: 12px;
-      font-size: 0.95rem;
-    }
-    .btn-save {
-      width: 100%;
-      padding: 14px;
-      background: #0a84ff; /* Azul Apple */
-      border: none;
-      color: #fff;
-      font-weight: 600;
-      border-radius: 14px;
-      font-size: 1rem;
-      margin-top: 10px;
-      cursor: pointer;
-    }
-  </style>
+}
+
+
+/* =========================================================
+   MODO MUY AHORRADOR
+   ========================================================= */
+
+.low-power * {
+
+    animation: none !important;
+
+    transition: none !important;
+}
+
+</style>
 </head>
-<body id="body" class="bg-ios-dark">
 
-  <div class="dashboard-container">
-    <!-- Top Status Bar -->
-    <div class="status-bar">
-      <div class="status-badge">
-        <div class="status-dot" id="status-dot"></div>
-        <span id="status-text">Smart Dashboard iOS</span>
-      </div>
-      <div class="status-badge" id="city-name">Buenos Aires</div>
-    </div>
 
-    <!-- Main Grid: Reloj + Clima (Izq) y Calendario (Der) -->
-    <div class="main-content">
-      
-      <!-- Columna Izquierda -->
-      <div class="left-section">
-        <div class="clock-time" id="clock">00:00</div>
-        <div class="clock-date" id="date">Cargando fecha...</div>
+<body>
 
-        <!-- Widget Clima -->
-        <div class="ios-card weather-widget">
-          <div class="weather-temp" id="temp">--°C</div>
-          <div class="weather-details">
-            <div id="weather-status" style="font-weight: 600;">Cargando...</div>
-            <div style="opacity: 0.6; font-size: 0.8rem;" id="weather-sub">Actualizado recién</div>
-          </div>
+<div class="dashboard">
+
+    <!-- =====================================================
+         TOP BAR
+         ===================================================== -->
+
+    <div class="topbar">
+
+        <div class="status">
+
+            <div
+                class="status-dot"
+                id="statusDot">
+            </div>
+
+            <span id="statusText">
+                Dashboard activo
+            </span>
+
         </div>
-      </div>
 
-      <!-- Columna Derecha: Widget Calendario -->
-      <div class="right-section">
-        <div class="ios-card calendar-widget">
-          <div class="calendar-header">
-            <span id="cal-month-year">Mes Año</span>
-          </div>
-          <div class="calendar-grid">
-            <!-- Nombres de Días -->
-            <div class="cal-day-name">D</div>
-            <div class="cal-day-name">L</div>
-            <div class="cal-day-name">M</div>
-            <div class="cal-day-name">M</div>
-            <div class="cal-day-name">J</div>
-            <div class="cal-day-name">V</div>
-            <div class="cal-day-name">S</div>
-          </div>
-          <!-- Grilla de días generada dinámicamente -->
-          <div class="calendar-grid" id="cal-days-grid" style="margin-top: 6px;"></div>
+
+        <div
+            class="city"
+            id="city">
+            Buenos Aires
         </div>
-      </div>
 
     </div>
 
-    <!-- Footer: Frase + Controles -->
+
+    <!-- =====================================================
+         CONTENIDO
+         ===================================================== -->
+
+    <div class="content">
+
+
+        <!-- IZQUIERDA -->
+
+        <div class="left">
+
+            <div
+                class="time"
+                id="clock">
+                00:00
+            </div>
+
+
+            <div
+                class="date"
+                id="date">
+                Cargando fecha...
+            </div>
+
+
+            <!-- CLIMA -->
+
+            <div class="weather">
+
+                <div
+                    class="weather-icon"
+                    id="weatherIcon">
+                    ☀
+                </div>
+
+
+                <div class="weather-info">
+
+                    <div
+                        class="temperature"
+                        id="temperature">
+                        --°
+                    </div>
+
+                    <div
+                        class="weather-status"
+                        id="weatherStatus">
+                        Cargando clima...
+                    </div>
+
+                    <div
+                        class="weather-updated"
+                        id="weatherUpdated">
+                        Esperando conexión
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             CALENDARIO
+             ================================================= -->
+
+        <div class="calendar">
+
+            <div class="calendar-header">
+
+                <div
+                    class="calendar-title"
+                    id="calendarMonth">
+                    Agosto
+                </div>
+
+                <div
+                    class="calendar-year"
+                    id="calendarYear">
+                    2026
+                </div>
+
+            </div>
+
+
+            <div class="week">
+
+                <div>D</div>
+                <div>L</div>
+                <div>M</div>
+                <div>M</div>
+                <div>J</div>
+                <div>V</div>
+                <div>S</div>
+
+            </div>
+
+
+            <div
+                class="days"
+                id="calendarDays">
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         FOOTER
+         ===================================================== -->
+
     <div class="footer">
-      <div class="quote-box" id="quote">"La simplicidad es la máxima sofisticación."</div>
-      <div class="controls">
-        <button class="btn-ios" id="btn-refresh" title="Recargar">↻</button>
-        <button class="btn-ios" id="btn-open-settings" title="Ajustes">⚙</button>
-      </div>
+
+        <div
+            class="quote"
+            id="quote">
+            Tu espacio. Tu momento.
+        </div>
+
+
+        <div class="footer-right">
+
+            <button
+                class="icon-button"
+                id="refreshButton">
+                ↻
+            </button>
+
+            <button
+                class="icon-button"
+                id="settingsButton">
+                ⚙
+            </button>
+
+        </div>
+
     </div>
-  </div>
 
-  <!-- Modal Ajustes -->
-  <div class="modal" id="modal-settings">
-    <div class="modal-content">
-      <div class="modal-title">Ajustes del Dashboard</div>
-      
-      <div class="form-group">
-        <label for="bg-select">Estilo Visual (iOS):</label>
-        <select id="bg-select" class="form-control">
-          <option value="bg-ios-dark">iOS Dark Glass</option>
-          <option value="bg-ios-neon">iOS Blur Neón</option>
-          <option value="bg-ios-midnight">iOS Midnight Blue</option>
-          <option value="bg-ios-oled">OLED Negro Puro</option>
-        </select>
-      </div>
+</div>
 
-      <div class="form-group">
-        <label for="lat-input">Latitud (Ubicación Clima):</label>
-        <input type="text" id="lat-input" class="form-control" value="-34.6037">
-      </div>
 
-      <div class="form-group">
-        <label for="lon-input">Longitud (Ubicación Clima):</label>
-        <input type="text" id="lon-input" class="form-control" value="-58.3816">
-      </div>
+<!-- =========================================================
+     MODAL
+     ========================================================= -->
 
-      <button class="btn-save" id="btn-close-settings">Guardar Cambios</button>
+<div
+    class="modal"
+    id="settingsModal">
+
+    <div class="modal-box">
+
+        <div class="modal-title">
+            Ajustes
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Ciudad
+            </label>
+
+            <input
+                class="input"
+                id="cityInput"
+                value="Buenos Aires">
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Latitud
+            </label>
+
+            <input
+                class="input"
+                id="latInput"
+                value="-34.6037">
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Longitud
+            </label>
+
+            <input
+                class="input"
+                id="lonInput"
+                value="-58.3816">
+
+        </div>
+
+
+        <button
+            class="save-button"
+            id="saveButton">
+
+            Guardar
+
+        </button>
+
     </div>
-  </div>
 
-  <script>
-    // JavaScript en ES5 estricto para compatibilidad total con Android 4.4 / Chrome 34
+</div>
 
-    var body = document.getElementById('body');
-    var clockEl = document.getElementById('clock');
-    var dateEl = document.getElementById('date');
-    var tempEl = document.getElementById('temp');
-    var statusEl = document.getElementById('weather-status');
-    var quoteEl = document.getElementById('quote');
-    
-    var modal = document.getElementById('modal-settings');
-    var btnOpen = document.getElementById('btn-open-settings');
-    var btnClose = document.getElementById('btn-close-settings');
-    var btnRefresh = document.getElementById('btn-refresh');
-    var bgSelect = document.getElementById('bg-select');
-    var latInput = document.getElementById('lat-input');
-    var lonInput = document.getElementById('lon-input');
 
-    var calMonthYear = document.getElementById('cal-month-year');
-    var calDaysGrid = document.getElementById('cal-days-grid');
+<script>
 
-    var quotes = [
-      '"La simplicidad es la máxima sofisticación."',
-      '"Haz que cada día sea tu obra maestra."',
-      '"El diseño no es solo cómo se ve, es cómo funciona."',
-      '"Modo Dashboard Activo."',
-      '"Crea el futuro que deseas ver."'
+/* =========================================================
+   VARIABLES
+   ========================================================= */
+
+var clock =
+    document.getElementById("clock");
+
+var date =
+    document.getElementById("date");
+
+var temperature =
+    document.getElementById("temperature");
+
+var weatherStatus =
+    document.getElementById("weatherStatus");
+
+var weatherUpdated =
+    document.getElementById("weatherUpdated");
+
+var weatherIcon =
+    document.getElementById("weatherIcon");
+
+var statusDot =
+    document.getElementById("statusDot");
+
+var statusText =
+    document.getElementById("statusText");
+
+var city =
+    document.getElementById("city");
+
+var calendarMonth =
+    document.getElementById("calendarMonth");
+
+var calendarYear =
+    document.getElementById("calendarYear");
+
+var calendarDays =
+    document.getElementById("calendarDays");
+
+var quote =
+    document.getElementById("quote");
+
+var settingsModal =
+    document.getElementById("settingsModal");
+
+var cityInput =
+    document.getElementById("cityInput");
+
+var latInput =
+    document.getElementById("latInput");
+
+var lonInput =
+    document.getElementById("lonInput");
+
+
+/* =========================================================
+   CONFIGURACIÓN
+   ========================================================= */
+
+var WEATHER_INTERVAL =
+    15 * 60 * 1000;
+
+
+/* =========================================================
+   FRASES
+   ========================================================= */
+
+var quotes = [
+
+    "Tu espacio. Tu momento.",
+
+    "La simplicidad es la máxima sofisticación.",
+
+    "Diseñar es hacer visible una idea.",
+
+    "Menos ruido. Más intención.",
+
+    "Crea el futuro que querés ver.",
+
+    "Modo Dashboard activo."
+
+];
+
+
+function cambiarFrase() {
+
+    var index =
+        Math.floor(
+            Math.random() *
+            quotes.length
+        );
+
+    quote.textContent =
+        quotes[index];
+}
+
+
+setInterval(
+    cambiarFrase,
+    30000
+);
+
+
+/* =========================================================
+   RELOJ
+   ========================================================= */
+
+function actualizarReloj() {
+
+    var ahora =
+        new Date();
+
+    var horas =
+        ahora.getHours();
+
+    var minutos =
+        ahora.getMinutes();
+
+    if (horas < 10) {
+        horas = "0" + horas;
+    }
+
+    if (minutos < 10) {
+        minutos = "0" + minutos;
+    }
+
+    clock.textContent =
+        horas + ":" + minutos;
+
+
+    var opciones = {
+
+        weekday: "long",
+
+        day: "numeric",
+
+        month: "long"
+
+    };
+
+
+    date.textContent =
+        ahora.toLocaleDateString(
+            "es-AR",
+            opciones
+        );
+}
+
+
+actualizarReloj();
+
+
+setInterval(
+    actualizarReloj,
+    1000
+);
+
+
+/* =========================================================
+   CALENDARIO
+   ========================================================= */
+
+function generarCalendario() {
+
+    var ahora =
+        new Date();
+
+    var año =
+        ahora.getFullYear();
+
+    var mes =
+        ahora.getMonth();
+
+    var diaActual =
+        ahora.getDate();
+
+
+    var nombresMeses = [
+
+        "enero",
+        "febrero",
+        "marzo",
+        "abril",
+        "mayo",
+        "junio",
+        "julio",
+        "agosto",
+        "septiembre",
+        "octubre",
+        "noviembre",
+        "diciembre"
+
     ];
 
-    // 1. Reloj y Fecha estilo iOS
-    function actualizarReloj() {
-      var ahora = new Date();
-      var horas = String(ahora.getHours());
-      var minutos = String(ahora.getMinutes());
-      
-      if (horas.length < 2) horas = '0' + horas;
-      if (minutos.length < 2) minutos = '0' + minutos;
-      
-      clockEl.textContent = horas + ':' + minutos;
 
-      var opciones = { weekday: 'long', day: 'numeric', month: 'long' };
-      dateEl.textContent = ahora.toLocaleDateString('es-ES', opciones);
+    calendarMonth.textContent =
+        nombresMeses[mes];
+
+    calendarYear.textContent =
+        año;
+
+
+    calendarDays.innerHTML =
+        "";
+
+
+    var primerDia =
+        new Date(
+            año,
+            mes,
+            1
+        ).getDay();
+
+
+    var diasMes =
+        new Date(
+            año,
+            mes + 1,
+            0
+        ).getDate();
+
+
+    var i;
+
+
+    /* espacios */
+
+    for (
+        i = 0;
+        i < primerDia;
+        i++
+    ) {
+
+        var empty =
+            document.createElement("div");
+
+        empty.className =
+            "day empty";
+
+        calendarDays.appendChild(
+            empty
+        );
     }
-    setInterval(actualizarReloj, 1000);
-    actualizarReloj();
 
-    // 2. Widget de Calendario interactivo iOS
-    function generarCalendario() {
-      var ahora = new Date();
-      var anio = ahora.getFullYear();
-      var mes = ahora.getMonth();
-      var diaHoy = ahora.getDate();
 
-      // Nombre del mes y año
-      var opcionesMes = { month: 'long', year: 'numeric' };
-      calMonthYear.textContent = ahora.toLocaleDateString('es-ES', opcionesMes);
+    /* días */
 
-      // Primer día del mes y total de días
-      var primerDia = new Date(anio, mes, 1).getDay();
-      var totalDias = new Date(anio, mes + 1, 0).getDate();
+    for (
+        i = 1;
+        i <= diasMes;
+        i++
+    ) {
 
-      calDaysGrid.innerHTML = '';
+        var elemento =
+            document.createElement("div");
 
-      // Celdas vacías para alinear el primer día
-      for (var i = 0; i < primerDia; i++) {
-        var divVacio = document.createElement('div');
-        divVacio.className = 'cal-day empty';
-        calDaysGrid.appendChild(divVacio);
-      }
+        elemento.className =
+            "day";
 
-      // Días del mes
-      for (var d = 1; d <= totalDias; d++) {
-        var divDia = document.createElement('div');
-        divDia.className = 'cal-day';
-        divDia.textContent = d;
 
-        if (d === diaHoy) {
-          divDia.className += ' today';
+        var numero =
+            document.createElement("span");
+
+        numero.textContent =
+            i;
+
+
+        if (i === diaActual) {
+
+            elemento.className =
+                "day today";
+
         }
 
-        calDaysGrid.appendChild(divDia);
-      }
+
+        elemento.appendChild(
+            numero
+        );
+
+
+        calendarDays.appendChild(
+            elemento
+        );
+
     }
+
+}
+
+
+generarCalendario();
+
+
+/* =========================================================
+   CLIMA
+   ========================================================= */
+
+function obtenerConfiguracion() {
+
+    return {
+
+        city:
+            localStorage.getItem(
+                "dashboard_city"
+            ) || "Buenos Aires",
+
+        lat:
+            localStorage.getItem(
+                "dashboard_lat"
+            ) || "-34.6037",
+
+        lon:
+            localStorage.getItem(
+                "dashboard_lon"
+            ) || "-58.3816"
+
+    };
+
+}
+
+
+/* =========================================================
+   ICONOS DEL CLIMA
+   ========================================================= */
+
+function obtenerIconoClima(
+    codigo
+) {
+
+    if (codigo === 0) {
+
+        return "☀";
+
+    }
+
+    if (
+        codigo === 1 ||
+        codigo === 2
+    ) {
+
+        return "🌤";
+
+    }
+
+    if (codigo === 3) {
+
+        return "☁";
+
+    }
+
+    if (
+        codigo === 45 ||
+        codigo === 48
+    ) {
+
+        return "🌫";
+
+    }
+
+    if (
+        codigo >= 51 &&
+        codigo <= 67
+    ) {
+
+        return "🌧";
+
+    }
+
+    if (
+        codigo >= 71 &&
+        codigo <= 77
+    ) {
+
+        return "❄";
+
+    }
+
+    if (
+        codigo >= 80 &&
+        codigo <= 82
+    ) {
+
+        return "🌧";
+
+    }
+
+    if (codigo >= 95) {
+
+        return "⛈";
+
+    }
+
+    return "☁";
+
+}
+
+
+/* =========================================================
+   TEXTO DEL CLIMA
+   ========================================================= */
+
+function traducirClima(
+    codigo
+) {
+
+    if (codigo === 0)
+        return "Despejado";
+
+    if (codigo === 1)
+        return "Mayormente despejado";
+
+    if (codigo === 2)
+        return "Parcialmente nublado";
+
+    if (codigo === 3)
+        return "Nublado";
+
+    if (
+        codigo === 45 ||
+        codigo === 48
+    )
+        return "Niebla";
+
+    if (
+        codigo >= 51 &&
+        codigo <= 55
+    )
+        return "Llovizna";
+
+    if (
+        codigo >= 56 &&
+        codigo <= 57
+    )
+        return "Llovizna helada";
+
+    if (
+        codigo >= 61 &&
+        codigo <= 67
+    )
+        return "Lluvia";
+
+    if (
+        codigo >= 71 &&
+        codigo <= 77
+    )
+        return "Nieve";
+
+    if (
+        codigo >= 80 &&
+        codigo <= 82
+    )
+        return "Chaparrones";
+
+    if (codigo >= 95)
+        return "Tormenta";
+
+    return "Nublado";
+
+}
+
+
+/* =========================================================
+   GUARDAR CLIMA
+   ========================================================= */
+
+function guardarClima(
+    temperaturaValor,
+    codigo
+) {
+
+    var datos = {
+
+        temperature:
+            temperaturaValor,
+
+        code:
+            codigo,
+
+        timestamp:
+            new Date().getTime()
+
+    };
+
+
+    try {
+
+        localStorage.setItem(
+            "dashboard_weather",
+            JSON.stringify(datos)
+        );
+
+    } catch (e) {
+
+        /* Si falla localStorage,
+           no hacemos nada */
+
+    }
+
+}
+
+
+/* =========================================================
+   MOSTRAR CLIMA
+   ========================================================= */
+
+function mostrarClima(
+    temperaturaValor,
+    codigo,
+    textoActualizacion
+) {
+
+    temperature.textContent =
+        Math.round(
+            temperaturaValor
+        ) + "°";
+
+
+    weatherStatus.textContent =
+        traducirClima(
+            codigo
+        );
+
+
+    weatherIcon.textContent =
+        obtenerIconoClima(
+            codigo
+        );
+
+
+    weatherUpdated.textContent =
+        textoActualizacion;
+
+}
+
+
+/* =========================================================
+   CLIMA GUARDADO
+   ========================================================= */
+
+function cargarClimaGuardado() {
+
+    try {
+
+        var guardado =
+            localStorage.getItem(
+                "dashboard_weather"
+            );
+
+
+        if (!guardado) {
+
+            return false;
+
+        }
+
+
+        var datos =
+            JSON.parse(
+                guardado
+            );
+
+
+        if (
+            datos &&
+            typeof datos.temperature !== "undefined"
+        ) {
+
+            mostrarClima(
+
+                datos.temperature,
+
+                datos.code,
+
+                "Último dato disponible"
+
+            );
+
+
+            return true;
+
+        }
+
+    } catch (e) {
+
+        return false;
+
+    }
+
+
+    return false;
+
+}
+
+
+/* =========================================================
+   OBTENER CLIMA ONLINE
+   ========================================================= */
+
+function obtenerClima() {
+
+    var config =
+        obtenerConfiguracion();
+
+
+    var url =
+        "https://api.open-meteo.com/v1/forecast" +
+
+        "?latitude=" +
+        encodeURIComponent(
+            config.lat
+        ) +
+
+        "&longitude=" +
+        encodeURIComponent(
+            config.lon
+        ) +
+
+        "&current=temperature_2m,weather_code" +
+
+        "&temperature_unit=celsius" +
+
+        "&timezone=auto";
+
+
+    statusText.textContent =
+        "Actualizando clima...";
+
+
+    var xhr =
+        new XMLHttpRequest();
+
+
+    xhr.open(
+        "GET",
+        url,
+        true
+    );
+
+
+    xhr.timeout =
+        10000;
+
+
+    xhr.onreadystatechange =
+        function() {
+
+            if (
+                xhr.readyState !== 4
+            ) {
+
+                return;
+
+            }
+
+
+            if (
+                xhr.status >= 200 &&
+                xhr.status < 300
+            ) {
+
+                try {
+
+                    var respuesta =
+                        JSON.parse(
+                            xhr.responseText
+                        );
+
+
+                    if (
+                        respuesta &&
+                        respuesta.current
+                    ) {
+
+                        var temp =
+                            respuesta.current.temperature_2m;
+
+                        var codigo =
+                            respuesta.current.weather_code;
+
+
+                        guardarClima(
+                            temp,
+                            codigo
+                        );
+
+
+                        mostrarClima(
+
+                            temp,
+
+                            codigo,
+
+                            "Actualizado ahora"
+
+                        );
+
+
+                        statusDot.className =
+                            "status-dot";
+
+
+                        statusText.textContent =
+                            "Conectado";
+
+                    }
+
+                }
+
+                catch (error) {
+
+                    manejarErrorClima();
+
+                }
+
+            }
+
+            else {
+
+                manejarErrorClima();
+
+            }
+
+        };
+
+
+    xhr.onerror =
+        function() {
+
+            manejarErrorClima();
+
+        };
+
+
+    xhr.ontimeout =
+        function() {
+
+            manejarErrorClima();
+
+        };
+
+
+    try {
+
+        xhr.send();
+
+    }
+
+    catch (error) {
+
+        manejarErrorClima();
+
+    }
+
+}
+
+
+/* =========================================================
+   ERROR / SIN INTERNET
+   ========================================================= */
+
+function manejarErrorClima() {
+
+    var tieneCache =
+        cargarClimaGuardado();
+
+
+    statusDot.className =
+        "status-dot offline";
+
+
+    if (tieneCache) {
+
+        statusText.textContent =
+            "Sin conexión · usando último dato";
+
+        weatherUpdated.textContent =
+            "Sin Internet · último dato guardado";
+
+    }
+
+    else {
+
+        statusText.textContent =
+            "Sin conexión";
+
+        weatherStatus.textContent =
+            "Sin datos";
+
+        weatherUpdated.textContent =
+            "Esperando conexión";
+
+    }
+
+}
+
+
+/* =========================================================
+   ARRANQUE CLIMA
+   ========================================================= */
+
+/*
+   Primero mostramos inmediatamente
+   el último clima guardado.
+
+   Después intentamos obtener uno nuevo.
+*/
+
+cargarClimaGuardado();
+
+obtenerClima();
+
+
+/* =========================================================
+   REFRESCO CADA 15 MINUTOS
+   ========================================================= */
+
+setInterval(
+
+    obtenerClima,
+
+    WEATHER_INTERVAL
+
+);
+
+
+/* =========================================================
+   DETECTAR INTERNET
+   ========================================================= */
+
+window.addEventListener(
+    "online",
+    function() {
+
+        statusDot.className =
+            "status-dot";
+
+        statusText.textContent =
+            "Conexión recuperada";
+
+        obtenerClima();
+
+    }
+);
+
+
+window.addEventListener(
+    "offline",
+    function() {
+
+        statusDot.className =
+            "status-dot offline";
+
+        statusText.textContent =
+            "Sin conexión";
+
+        cargarClimaGuardado();
+
+    }
+);
+
+
+/* =========================================================
+   BOTÓN REFRESH
+   ========================================================= */
+
+document.getElementById(
+    "refreshButton"
+).onclick = function() {
+
     generarCalendario();
 
-    // 3. Clima Open-Meteo
-    function obtenerClima() {
-      var lat = localStorage.getItem('ios_dash_lat') || '-34.6037';
-      var lon = localStorage.getItem('ios_dash_lon') || '-58.3816';
-      
-      var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon + '&current_weather=true';
+    obtenerClima();
 
-      var xhr = new XMLHttpRequest();
-      xhr.open('GET', url, true);
-      xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4) {
-          if (xhr.status === 200) {
-            var res = JSON.parse(xhr.responseText);
-            if (res && res.current_weather) {
-              tempEl.textContent = Math.round(res.current_weather.temperature) + '°C';
-              statusEl.textContent = traducirCodigoClima(res.current_weather.weathercode);
-            }
-          } else {
-            statusEl.textContent = 'Sin conexión';
-          }
-        }
-      };
-      xhr.send();
-    }
+    actualizarReloj();
 
-    function traducirCodigoClima(code) {
-      if (code === 0) return 'Despejado';
-      if (code >= 1 && code <= 3) return 'Parcialmente Nublado';
-      if (code >= 45 && code <= 48) return 'Niebla';
-      if (code >= 51 && code <= 67) return 'Lluvia Ligera';
-      if (code >= 80 && code <= 82) return 'Lluvia Intensa';
-      if (code >= 95) return 'Tormenta';
-      return 'Nublado';
-    }
+};
+
+
+/* =========================================================
+   AJUSTES
+   ========================================================= */
+
+document.getElementById(
+    "settingsButton"
+).onclick = function() {
+
+    var config =
+        obtenerConfiguracion();
+
+
+    cityInput.value =
+        config.city;
+
+    latInput.value =
+        config.lat;
+
+    lonInput.value =
+        config.lon;
+
+
+    settingsModal.className =
+        "modal active";
+
+};
+
+
+/* =========================================================
+   GUARDAR AJUSTES
+   ========================================================= */
+
+document.getElementById(
+    "saveButton"
+).onclick = function() {
+
+    localStorage.setItem(
+        "dashboard_city",
+        cityInput.value
+    );
+
+
+    localStorage.setItem(
+        "dashboard_lat",
+        latInput.value
+    );
+
+
+    localStorage.setItem(
+        "dashboard_lon",
+        lonInput.value
+    );
+
+
+    city.textContent =
+        cityInput.value;
+
+
+    settingsModal.className =
+        "modal";
+
 
     obtenerClima();
-    setInterval(obtenerClima, 15 * 60 * 1000);
 
-    // 4. Rotador de Frases
-    function cambiarFrase() {
-      var idx = Math.floor(Math.random() * quotes.length);
-      quoteEl.textContent = quotes[idx];
-    }
-    setInterval(cambiarFrase, 30000);
+};
 
-    // 5. Ajustes y Persistencia
-    function cargarConfiguracion() {
-      var bgGuardado = localStorage.getItem('ios_dash_bg') || 'bg-ios-dark';
-      var latGuardada = localStorage.getItem('ios_dash_lat') || '-34.6037';
-      var lonGuardada = localStorage.getItem('ios_dash_lon') || '-58.3816';
 
-      body.className = bgGuardado;
-      bgSelect.value = bgGuardado;
-      latInput.value = latGuardada;
-      lonInput.value = lonGuardada;
-    }
+/* =========================================================
+   CERRAR MODAL TOCANDO AFUERA
+   ========================================================= */
 
-    btnOpen.onclick = function() { modal.className = 'modal active'; };
+settingsModal.onclick =
+    function(event) {
 
-    btnClose.onclick = function() {
-      var nuevoBg = bgSelect.value;
-      var nuevaLat = latInput.value;
-      var nuevaLon = lonInput.value;
+        if (
+            event.target ===
+            settingsModal
+        ) {
 
-      localStorage.setItem('ios_dash_bg', nuevoBg);
-      localStorage.setItem('ios_dash_lat', nuevaLat);
-      localStorage.setItem('ios_dash_lon', nuevaLon);
+            settingsModal.className =
+                "modal";
 
-      body.className = nuevoBg;
-      modal.className = 'modal';
+        }
 
-      obtenerClima();
     };
 
-    btnRefresh.onclick = function() {
-      obtenerClima();
-      generarCalendario();
-    };
 
-    cargarConfiguracion();
-  </script>
+/* =========================================================
+   CARGAR CONFIGURACIÓN INICIAL
+   ========================================================= */
+
+(function() {
+
+    var config =
+        obtenerConfiguracion();
+
+
+    city.textContent =
+        config.city;
+
+})();
+
+
+/* =========================================================
+   MODO AHORRO
+   ========================================================= */
+
+/*
+   La tablet tiene solo 1 GB RAM.
+   Dejamos una clase preparada para
+   desactivar animaciones si alguna vez
+   queremos priorizar consumo mínimo.
+*/
+
+document.body.className =
+    "low-power";
+
+
+</script>
+
 </body>
 </html>

@@ -2150,145 +2150,56 @@ settingsModal.onclick =
 
 document.body.className =
     "low-power";
-
 /* =========================================================
-   DESCARGAR HTML COMPLETO
+   EXPORTAR HTML - COMPATIBILIDAD ANDROID 4.4
    ========================================================= */
 
-document.getElementById(
-    "downloadButton"
-).onclick = function() {
-
-    /*
-       Clonamos todo el documento
-       para poder modificar la copia
-       sin afectar el dashboard actual.
-    */
+document.getElementById("downloadButton").onclick = function() {
 
     var copia =
         document.documentElement.cloneNode(true);
 
+    /* Eliminar botón de descarga */
+    var boton =
+        copia.querySelector("#downloadButton");
 
-    /*
-       Eliminamos el botón de descarga
-       de la copia.
-    */
-
-    var botonDescarga =
-        copia.querySelector(
-            "#downloadButton"
-        );
-
-    if (botonDescarga) {
-
-        botonDescarga.parentNode.removeChild(
-            botonDescarga
-        );
-
+    if (boton) {
+        boton.parentNode.removeChild(boton);
     }
 
+    /* Eliminar este propio script de exportación */
+    var scripts =
+        copia.getElementsByTagName("script");
 
     /*
-       También eliminamos el atributo
-       title de los botones restantes.
-    */
-
-    var botones =
-        copia.querySelectorAll(
-            ".icon-button"
-        );
-
-    var i;
-
-    for (
-        i = 0;
-        i < botones.length;
-        i++
-    ) {
-
-        botones[i].removeAttribute(
-            "title"
-        );
-
-    }
-
-
-    /*
-       Convertimos el documento completo
-       en texto HTML.
+       No eliminamos los scripts porque
+       necesitamos conservar todo el funcionamiento.
     */
 
     var html =
         "<!DOCTYPE html>\n" +
         copia.outerHTML;
 
-
     /*
-       Creamos el archivo.
+       Codificamos el HTML directamente
+       en una URL data:
     */
 
-    var blob =
-        new Blob(
-            [html],
-            {
-                type:
-                    "text/html;charset=utf-8"
-            }
-        );
-
+    var encoded =
+        encodeURIComponent(html);
 
     /*
-       Creamos una URL temporal.
+       Abrimos una nueva pestaña.
     */
 
-    var url =
-        window.URL.createObjectURL(
-            blob
-        );
-
-
-    /*
-       Creamos un enlace invisible.
-    */
-
-    var enlace =
-        document.createElement(
-            "a"
-        );
-
-    enlace.href =
-        url;
-
-    enlace.download =
-        "dashboard.html";
-
-
-    document.body.appendChild(
-        enlace
-    );
-
-
-    /*
-       Simulamos el click.
-    */
-
-    enlace.click();
-
-
-    /*
-       Limpiamos.
-    */
-
-    document.body.removeChild(
-        enlace
-    );
-
-
-    window.URL.revokeObjectURL(
-        url
+    window.open(
+        "data:text/html;charset=utf-8," +
+        encoded,
+        "_blank"
     );
 
 };
+
 </script>
 
 </body>

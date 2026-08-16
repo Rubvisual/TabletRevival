@@ -410,6 +410,13 @@
 
     // Inicializar configuración al cargar
     cargarConfiguracion();
+
+    // Ocultar barra de direcciones mediante autoscroll
+window.addEventListener('load', function() {
+  setTimeout(function() {
+    window.scrollTo(0, 1);
+  }, 100);
+});
   </script>
 </body>
 </html>

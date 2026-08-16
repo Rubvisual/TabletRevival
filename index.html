@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Smart Dashboard Tablet</title>
+  <style>
+    /* Reset & Base */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      color: #ffffff;
+      background-color: #050508;
+    }
+
+    /* ESTILOS DE FONDOS */
+    /* 1. Neon Fluid (Default) */
+    .bg-neon {
+      background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+      -webkit-animation: gradientAnimation 15s ease infinite;
+      animation: gradientAnimation 15s ease infinite;
+      background-size: 400% 400%;
+    }
+    @-webkit-keyframes gradientAnimation {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    @keyframes gradientAnimation {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* 2. Cyberpunk */
+    .bg-cyberpunk {
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+    }
+    /* 3. Dark OLED */
+    .bg-dark {
+      background: #000000;
+    }
+    /* 4. Warm Night */
+    .bg-warm {
+      background: linear-gradient(135deg, #2c3e50, #000000);
+    }
+
+    /* Layout principal */
+    .container {
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: flex;
+      -webkit-box-orient: vertical;
+      -webkit-box-direction: normal;
+      -webkit-flex-direction: column;
+      flex-direction: column;
+      -webkit-box-pack: justify;
+      -webkit-justify-content: space-between;
+      justify-content: space-between;
+      height: 100vh;
+      padding: 30px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Header: Clima y Estado */
+    .header {
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: flex;
+      -webkit-box-pack: justify;
+      -webkit-justify-content: space-between;
+      justify-content: space-between;
+      -webkit-box-align: center;
+      -webkit-align-items: center;
+      align-items: center;
+    }
+    .weather-card {
+      background: rgba(0, 0, 0, 0.35);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 12px 20px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: flex;
+      -webkit-box-align: center;
+      -webkit-align-items: center;
+      align-items: center;
+    }
+    .weather-temp {
+      font-size: 2rem;
+      font-weight: bold;
+      margin-right: 12px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+    .weather-details {
+      font-size: 0.85rem;
+      opacity: 0.9;
+      line-height: 1.2;
+    }
+
+    /* Main: Reloj */
+    .main-clock {
+      text-align: center;
+      margin: auto 0;
+    }
+    .clock-time {
+      font-size: 8.5rem;
+      font-weight: 700;
+      letter-spacing: -2px;
+      line-height: 1;
+      text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .clock-date {
+      font-size: 1.8rem;
+      font-weight: 300;
+      margin-top: 10px;
+      text-transform: capitalize;
+      letter-spacing: 1px;
+      opacity: 0.95;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.4);
+    }
+
+    /* Footer: Frases y Botón Ajustes */
+    .footer {
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: flex;
+      -webkit-box-pack: justify;
+      -webkit-justify-content: space-between;
+      justify-content: space-between;
+      -webkit-box-align: center;
+      -webkit-align-items: center;
+      align-items: center;
+    }
+    .quote-box {
+      font-style: italic;
+      font-size: 1rem;
+      opacity: 0.85;
+      max-width: 80%;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+    .btn-settings {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: 30px;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    /* Panel de Configuración */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 10;
+      -webkit-box-pack: center;
+      -webkit-justify-content: center;
+      justify-content: center;
+      -webkit-box-align: center;
+      -webkit-align-items: center;
+      align-items: center;
+    }
+    .modal.active {
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: flex;
+    }
+    .modal-content {
+      background: #1a1a24;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      width: 85%;
+      max-width: 450px;
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    }
+    .modal-title {
+      font-size: 1.4rem;
+      margin-bottom: 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 10px;
+    }
+    .form-group {
+      margin-bottom: 18px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+      color: #ccc;
+    }
+    .form-control {
+      width: 100%;
+      padding: 10px;
+      background: #0d0d12;
+      border: 1px solid #333;
+      color: #fff;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+    .btn-close {
+      width: 100%;
+      padding: 12px;
+      background: #e73c7e;
+      border: none;
+      color: #fff;
+      font-weight: bold;
+      border-radius: 10px;
+      font-size: 1rem;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body id="body" class="bg-neon">
+
+  <div class="container">
+    <!-- Header: Clima -->
+    <div class="header">
+      <div class="weather-card" id="weather-card">
+        <div class="weather-temp" id="temp">--°C</div>
+        <div class="weather-details">
+          <div id="weather-status">Cargando...</div>
+          <div id="city-name" style="opacity: 0.6; font-size: 0.75rem;">Buenos Aires</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Centro: Reloj Gigante -->
+    <div class="main-clock">
+      <div class="clock-time" id="clock">00:00</div>
+      <div class="clock-date" id="date">Cargando fecha...</div>
+    </div>
+
+    <!-- Footer: Frases e Interacción -->
+    <div class="footer">
+      <div class="quote-box" id="quote">"El conocimiento es poder."</div>
+      <button class="btn-settings" id="btn-open-settings">⚙</button>
+    </div>
+  </div>
+
+  <!-- Modal de Configuración -->
+  <div class="modal" id="modal-settings">
+    <div class="modal-content">
+      <div class="modal-title">Configuración</div>
+      
+      <div class="form-group">
+        <label for="bg-select">Estilo de Fondo:</label>
+        <select id="bg-select" class="form-control">
+          <option value="bg-neon">Degradé Neón Dinámico</option>
+          <option value="bg-cyberpunk">Ciberpunk Oscuro</option>
+          <option value="bg-dark">Modo Negro OLED</option>
+          <option value="bg-warm">Noche Cálida</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="lat-input">Latitud (Clima):</label>
+        <input type="text" id="lat-input" class="form-control" value="-34.6037">
+      </div>
+
+      <div class="form-group">
+        <label for="lon-input">Longitud (Clima):</label>
+        <input type="text" id="lon-input" class="form-control" value="-58.3816">
+      </div>
+
+      <button class="btn-close" id="btn-close-settings">Guardar y Cerrar</button>
+    </div>
+  </div>
+
+  <script>
+    // JS en ES5 puro para compatibilidad con Chrome 34 (Android 4.4)
+
+    // Elementos DOM
+    var body = document.getElementById('body');
+    var clockEl = document.getElementById('clock');
+    var dateEl = document.getElementById('date');
+    var tempEl = document.getElementById('temp');
+    var statusEl = document.getElementById('weather-status');
+    var quoteEl = document.getElementById('quote');
+    
+    var modal = document.getElementById('modal-settings');
+    var btnOpen = document.getElementById('btn-open-settings');
+    var btnClose = document.getElementById('btn-close-settings');
+    var bgSelect = document.getElementById('bg-select');
+    var latInput = document.getElementById('lat-input');
+    var lonInput = document.getElementById('lon-input');
+
+    // Banco de Frases
+    var quotes = [
+      '"La simplicidad es la máxima sofisticación."',
+      '"Haz que cada día sea tu obra maestra."',
+      '"Crea el futuro que deseas ver."',
+      '"Modo Dashboard Activo."',
+      '"Diseña tu propia realidad."'
+    ];
+
+    // 1. Reloj y Fecha
+    function actualizarReloj() {
+      var ahora = new Date();
+      var horas = String(ahora.getHours());
+      var minutos = String(ahora.getMinutes());
+      
+      if (horas.length < 2) horas = '0' + horas;
+      if (minutos.length < 2) minutos = '0' + minutos;
+      
+      clockEl.textContent = horas + ':' + minutos;
+
+      // Fecha en formato legible
+      var opciones = { weekday: 'long', day: 'numeric', month: 'long' };
+      dateEl.textContent = ahora.toLocaleDateString('es-ES', opciones);
+    }
+    setInterval(actualizarReloj, 1000);
+    actualizarReloj();
+
+    // 2. Clima vía Open-Meteo (Sin API Key, ES5 XMLHttpRequest)
+    function obtenerClima() {
+      var lat = localStorage.getItem('dash_lat') || '-34.6037';
+      var lon = localStorage.getItem('dash_lon') || '-58.3816';
+      
+      var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon + '&current_weather=true';
+
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', url, true);
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+          if (xhr.status === 200) {
+            var res = JSON.parse(xhr.responseText);
+            if (res && res.current_weather) {
+              tempEl.textContent = Math.round(res.current_weather.temperature) + '°C';
+              statusEl.textContent = traducirCodigoClima(res.current_weather.weathercode);
+            }
+          } else {
+            statusEl.textContent = 'Sin conexión';
+          }
+        }
+      };
+      xhr.send();
+    }
+
+    function traducirCodigoClima(code) {
+      if (code === 0) return 'Despejado';
+      if (code >= 1 && code <= 3) return 'Parcialmente Nublado';
+      if (code >= 45 && code <= 48) return 'Niebla';
+      if (code >= 51 && code <= 67) return 'Lluvia Ligera';
+      if (code >= 80 && code <= 82) return 'Lluvia Intensa';
+      if (code >= 95) return 'Tormenta';
+      return 'Nublado';
+    }
+
+    // Actualizar clima cada 15 minutos
+    obtenerClima();
+    setInterval(obtenerClima, 15 * 60 * 1000);
+
+    // 3. Rotador de Frases (cada 30 segundos)
+    function cambiarFrase() {
+      var idx = Math.floor(Math.random() * quotes.length);
+      quoteEl.textContent = quotes[idx];
+    }
+    setInterval(cambiarFrase, 30000);
+
+    // 4. Panel de Ajustes y LocalStorage
+    function cargarConfiguracion() {
+      var bgGuardado = localStorage.getItem('dash_bg') || 'bg-neon';
+      var latGuardada = localStorage.getItem('dash_lat') || '-34.6037';
+      var lonGuardada = localStorage.getItem('dash_lon') || '-58.3816';
+
+      body.className = bgGuardado;
+      bgSelect.value = bgGuardado;
+      latInput.value = latGuardada;
+      lonInput.value = lonGuardada;
+    }
+
+    btnOpen.onclick = function() {
+      modal.className = 'modal active';
+    };
+
+    btnClose.onclick = function() {
+      var nuevoBg = bgSelect.value;
+      var nuevaLat = latInput.value;
+      var nuevaLon = lonInput.value;
+
+      localStorage.setItem('dash_bg', nuevoBg);
+      localStorage.setItem('dash_lat', nuevaLat);
+      localStorage.setItem('dash_lon', nuevaLon);
+
+      body.className = nuevoBg;
+      modal.className = 'modal';
+
+      obtenerClima(); // Reconsultar con nuevas coordenadas si cambiaron
+    };
+
+    // Inicializar configuración al cargar
+    cargarConfiguracion();
+  </script>
+</body>
+</html>

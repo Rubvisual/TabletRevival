@@ -1059,19 +1059,24 @@ body:before {
 
 
         <div class="footer-right">
+    <button
+        class="icon-button"
+        id="downloadButton"
+        title="Descargar dashboard">
+        ↓
+    </button>
 
-            <button
-                class="icon-button"
-                id="refreshButton">
-                ↻
-            </button>
+    <button
+        class="icon-button"
+        id="refreshButton">
+        ↻
+    </button>
 
-            <button
-                class="icon-button"
-                id="settingsButton">
-                ⚙
-            </button>
-
+    <button
+        class="icon-button"
+        id="settingsButton">
+        ⚙
+    </button>
         </div>
 
     </div>
@@ -2146,7 +2151,144 @@ settingsModal.onclick =
 document.body.className =
     "low-power";
 
+/* =========================================================
+   DESCARGAR HTML COMPLETO
+   ========================================================= */
 
+document.getElementById(
+    "downloadButton"
+).onclick = function() {
+
+    /*
+       Clonamos todo el documento
+       para poder modificar la copia
+       sin afectar el dashboard actual.
+    */
+
+    var copia =
+        document.documentElement.cloneNode(true);
+
+
+    /*
+       Eliminamos el botón de descarga
+       de la copia.
+    */
+
+    var botonDescarga =
+        copia.querySelector(
+            "#downloadButton"
+        );
+
+    if (botonDescarga) {
+
+        botonDescarga.parentNode.removeChild(
+            botonDescarga
+        );
+
+    }
+
+
+    /*
+       También eliminamos el atributo
+       title de los botones restantes.
+    */
+
+    var botones =
+        copia.querySelectorAll(
+            ".icon-button"
+        );
+
+    var i;
+
+    for (
+        i = 0;
+        i < botones.length;
+        i++
+    ) {
+
+        botones[i].removeAttribute(
+            "title"
+        );
+
+    }
+
+
+    /*
+       Convertimos el documento completo
+       en texto HTML.
+    */
+
+    var html =
+        "<!DOCTYPE html>\n" +
+        copia.outerHTML;
+
+
+    /*
+       Creamos el archivo.
+    */
+
+    var blob =
+        new Blob(
+            [html],
+            {
+                type:
+                    "text/html;charset=utf-8"
+            }
+        );
+
+
+    /*
+       Creamos una URL temporal.
+    */
+
+    var url =
+        window.URL.createObjectURL(
+            blob
+        );
+
+
+    /*
+       Creamos un enlace invisible.
+    */
+
+    var enlace =
+        document.createElement(
+            "a"
+        );
+
+    enlace.href =
+        url;
+
+    enlace.download =
+        "dashboard.html";
+
+
+    document.body.appendChild(
+        enlace
+    );
+
+
+    /*
+       Simulamos el click.
+    */
+
+    enlace.click();
+
+
+    /*
+       Limpiamos.
+    */
+
+    document.body.removeChild(
+        enlace
+    );
+
+
+    window.URL.revokeObjectURL(
+        url
+    );
+
+};
 </script>
 
 </body>
